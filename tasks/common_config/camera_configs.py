@@ -93,7 +93,7 @@ class CameraPresets:
     @classmethod
     def g1_right_high_camera(cls) -> CameraCfg:
         """right high camera configuration""" #camera parameters from front camera
-        return CameraBaseCfg.get_camera_config(prim_path="/World/envs/env_.*/Robot/d435_link/cam_right_high123",
+        return CameraBaseCfg.get_camera_config(prim_path="/World/envs/env_.*/Robot/d435_link/cam_right_high",
                                                     pos_offset=(0.0, 0.1, 0),
                                                     rot_offset=(0.5, -0.5, 0.5, -0.5),
                                                     focal_length = 7.6,

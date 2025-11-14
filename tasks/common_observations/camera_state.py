@@ -126,9 +126,9 @@ def get_camera_image(
         head_image = env.scene["cam_right_high"].data.output["rgb"][0]  # [batch, height, width, 3]
 
         if head_image.device.type == 'cpu':
-            images["cam_right_high123"] = head_image.numpy()
+            images["cam_right_high"] = head_image.numpy()
         else:
-            images["cam_right_high123"] = head_image.cpu().numpy()
+            images["cam_right_high"] = head_image.cpu().numpy()
 
     # Head left camera (left high camera)
     if "cam_left_high" in camera_keys:

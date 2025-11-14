@@ -112,6 +112,8 @@ class TableCylinderSceneCfg(InteractiveSceneCfg): # inherit from the interactive
             ),
         ),
     )
+    
+
     # Ground plane
     # 3. ground configuration
     # ground = AssetBaseCfg(

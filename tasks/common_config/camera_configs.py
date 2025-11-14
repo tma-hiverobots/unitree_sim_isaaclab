@@ -87,6 +87,26 @@ class CameraPresets:
     def g1_front_camera(cls) -> CameraCfg:
         """front camera configuration"""
         return CameraBaseCfg.get_camera_config()
+
+                #HIVE-INFO: add here g1_right_high_camera and g1_left_high_camera
+
+    @classmethod
+    def g1_right_high_camera(cls) -> CameraCfg:
+        """right high camera configuration""" #camera parameters from front camera
+        return CameraBaseCfg.get_camera_config(prim_path="/World/envs/env_.*/Robot/d435_link/cam_right_high123",
+                                                    pos_offset=(0.0, 0.1, 0),
+                                                    rot_offset=(0.5, -0.5, 0.5, -0.5),
+                                                    focal_length = 7.6,
+                                                    horizontal_aperture=20.0)
+    @classmethod
+    def g1_left_high_camera(cls) -> CameraCfg:
+        """left high camera configuration"""
+        return CameraBaseCfg.get_camera_config(prim_path="/World/envs/env_.*/Robot/d435_link/cam_left_high",
+                                                    pos_offset=(0.0, -0.1, 0),
+                                                    rot_offset=(0.5, -0.5, 0.5, -0.5),
+                                                    focal_length = 7.6,
+                                                    horizontal_aperture=20.0)
+
     @classmethod
     def h12_front_camera(cls) -> CameraCfg:
         """front camera configuration"""

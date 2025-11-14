@@ -35,3 +35,4 @@ __all__ = [
         "move_cylinder_g1_29dof_dex3_wholebody",
         "move_cylinder_g1_29dof_inspire_wholebody"
 ]
+#HIVE-INFO: new tasks should be added here

@@ -57,12 +57,34 @@ class MultiImageWriter:
         self._jpeg_quality = int(jpeg_quality)
         self._skip_cvtcolor = bool(skip_cvtcolor)
         
+        create_here=False
         try:
             # try to open the existing shared memory
             self.shm = shared_memory.SharedMemory(name=shm_name)
         except FileNotFoundError:
             # if not exist, create a new shared memory
             self.shm = shared_memory.SharedMemory(create=True, size=shm_size, name=shm_name)
+            create_here=True
+
+            # -------- 关键新增：放宽这块共享内存的权限给共享组 --------
+            # 共享内存对象 /isaac_multi_image_shm 会映射到 /dev/shm/isaac_multi_image_shm
+            shm_file = f"/dev/shm/{shm_name.lstrip('/')}"
+            try:
+                shared_group = "unitree_robotics"  # <- 确保和你系统里实际的共享组同名
+                gid = grp.getgrnam(shared_group).gr_gid
+
+                # 把 group 设成共享组；uid 传 -1 表示保持当前 owner 不变
+                os.chown(shm_file, -1, gid)
+
+                # rw-rw----   (用户可读写 + 组可读写；其他人没权限)
+                os.chmod(shm_file, 0o660)
+
+                print(f"[MultiImageWriter] Adjusted shm permissions: {shm_file} -> group={shared_group}, mode=660")
+            except Exception as e:
+                # 如果这一段失败（例如当前用户没有权限 chown），不要让程序直接崩
+                print(f"[MultiImageWriter][WARN] Failed to relax shm permissions on {shm_file}: {e}")
+            # -------- 新增结束 --------
+
         
         print(f"[MultiImageWriter] Shared memory initialized: {shm_name}")
 

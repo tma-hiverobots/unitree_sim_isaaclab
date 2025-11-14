@@ -85,7 +85,7 @@ def get_camera_image(
 
 
     scene_id = id(env.scene)
-    if _camera_cache['last_scene_id'] != scene_id:
+    if _camera_cache['last_scene_id'] != scene_id: #HIVE-INFO: Populates _camera_cache 
         _camera_cache['camera_keys'] = list(env.scene.keys())
         _camera_cache['available_cameras'] = [name for name in _camera_cache['camera_keys'] if "camera" in name.lower()]
         _camera_cache['last_scene_id'] = scene_id
@@ -108,7 +108,10 @@ def get_camera_image(
     # env.sim.render()
     
 
+    #HIVE-INFO: relevant to get camera images to feed policy
+
     camera_keys = _camera_cache['camera_keys']
+
     # Head camera (front camera)
     if "front_camera" in camera_keys:
         head_image = env.scene["front_camera"].data.output["rgb"][0]  # [batch, height, width, 3]
@@ -117,7 +120,25 @@ def get_camera_image(
             images["head"] = head_image.numpy()
         else:
             images["head"] = head_image.cpu().numpy()
-    
+
+    # Head right camera (right high camera)
+    if "cam_right_high" in camera_keys:
+        head_image = env.scene["cam_right_high"].data.output["rgb"][0]  # [batch, height, width, 3]
+
+        if head_image.device.type == 'cpu':
+            images["cam_right_high123"] = head_image.numpy()
+        else:
+            images["cam_right_high123"] = head_image.cpu().numpy()
+
+    # Head left camera (left high camera)
+    if "cam_left_high" in camera_keys:
+        head_image = env.scene["cam_left_high"].data.output["rgb"][0]  # [batch, height, width, 3]
+
+        if head_image.device.type == 'cpu':
+            images["cam_left_high"] = head_image.numpy()
+        else:
+            images["cam_left_high"] = head_image.cpu().numpy()
+
     # Left camera (left wrist camera)
     if "left_wrist_camera" in camera_keys:
         left_image = env.scene["left_wrist_camera"].data.output["rgb"][0]

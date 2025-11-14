@@ -45,6 +45,11 @@ class ObjectTableSceneCfg(TableRedGreenYellowBlockSceneCfg):
 
     # 6. add camera configuration 
     front_camera = CameraPresets.g1_front_camera()
+    # HIVE-INFO : add camera here to match cameras from datasets (cam_right_high, cam_left_high)
+    cam_right_high = CameraPresets.g1_right_high_camera()
+    cam_left_high = CameraPresets.g1_left_high_camera()
+
+
     left_wrist_camera = CameraPresets.left_dex3_wrist_camera()
     right_wrist_camera = CameraPresets.right_dex3_wrist_camera()
 
@@ -77,6 +82,7 @@ class ObservationsCfg:
 
         # 3. camera image observation
         camera_image = ObsTerm(func=mdp.get_camera_image)
+        #HIVE-TODO: analyze here to understand if this requires changes
 
         def __post_init__(self):
             """post initialization function

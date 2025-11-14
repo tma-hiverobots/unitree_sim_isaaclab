@@ -8,6 +8,7 @@ import cv2
 import zmq
 import time
 import threading
+import os
 from image_server.shared_memory_utils import MultiImageReader
 
 
@@ -19,6 +20,15 @@ class ImageServer:
         print("[Image Server] Initializing multi-image server from shared memory")
         
         self.fps = fps
+
+        env_port = os.getenv("IMAGE_SERVER_PORT")
+        if env_port is not None:
+            try:
+                port = int(env_port)
+                print(f"[Image Server] Overriding port from env IMAGE_SERVER_PORT={port}")
+            except ValueError:
+                print(f"[Image Server][WARN] Invalid IMAGE_SERVER_PORT={env_port}, using default {port}")
+
         self.port = port
         self.Unit_Test = Unit_Test
         self.running = False
@@ -31,7 +41,16 @@ class ImageServer:
         # Set ZeroMQ context and socket
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
-        self.socket.bind(f"tcp://*:{self.port}")
+        # self.socket.bind(f"tcp://*:{self.port}")
+
+        bind_addr = f"tcp://*:{self.port}"
+        try:
+            self.socket.bind(bind_addr)
+        except Exception as e:
+            # If port is already in use, we print a clear error and re-raise
+            print(f"[Image Server][ERROR] Failed to bind image server on {bind_addr}: {e}")
+            raise
+
 
         if self.Unit_Test:
             self._init_performance_metrics()
